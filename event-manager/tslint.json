@@ -126,6 +126,12 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
+    "ordered-imports": [true, {
+      "grouped-imports": false,
+      "named-imports-order": "lowercase-first",
+      "import-sources-order": "lowercase-first"
+    }
+    ],
     "directive-class-suffix": true
   }
 }
