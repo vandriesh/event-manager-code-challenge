@@ -1,0 +1,22 @@
+<h3>Calls</h3>
+
+<ul>
+  <li *ngFor="let call of calls">
+    <div>Name: {{call.name}}</div>
+    <div>created at: {{call.created_date | date}}</div>
+    <div>scheduled for: {{call.event_date | date}}</div>
+    <div>participants : <a [href]="formatEmailLink(call)"
+        target="newMailWindow">{{getParticipants(call.participants).join(', ')}}</a></div>
+  </li>
+</ul>
+<h3>Meetings</h3>
+
+<ul>
+  <li *ngFor="let meeting of meetings">
+    <div>Name: {{meeting.name}}</div>
+    <div>created at: {{meeting.created_date | date}}</div>
+    <div>scheduled for: {{meeting.event_date | date}}</div>
+    <div>participants : <a [href]="formatEmailLink(meeting)"
+        target="newMailWindow">{{getParticipants(meeting.participants).join(', ')}}</a></div>
+  </li>
+</ul>
