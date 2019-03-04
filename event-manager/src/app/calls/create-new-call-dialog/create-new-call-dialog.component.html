@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>Create call event</h2>
+<div mat-dialog-content [formGroup]="callForm">
+  <div class="row">
+    <div class="col">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Name" formControlName="name" required autocomplete="off">
+        <mat-error *ngIf="callForm.controls['name'].hasError('required')">
+          Name field is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="event_date"
+            autocomplete="off">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled="false"></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="col time-picker">
+      <mat-form-field >
+        <input matInput placeholder="hh" formControlName="hours" required
+            min="0" max="23"
+            type="number" autocomplete="off">
+        <mat-error *ngIf="callForm.controls['hours'].hasError('required')">
+          Hours field is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="hasMinOrMaxError('hours')">
+          [0-23]
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col middle-col">:</div>
+    <div class="col time-picker">
+      <mat-form-field >
+        <input matInput placeholder="mm" formControlName="minutes" required
+            min="0" max="59"
+            type="number" autocomplete="off">
+        <mat-error *ngIf="callForm.controls['minutes'].hasError('required')">
+          Minutes field is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="hasMinOrMaxError('minutes')">
+          [0-59]
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Participant 1" formControlName="participant1" required>
+        <mat-error *ngIf="callForm.controls['participant1'].hasError('required')">
+          Participant 1 is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="callForm.controls['participant1'].hasError('email')">
+          Value should be email
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Participant 2" formControlName="participant2" required>
+        <mat-error *ngIf="callForm.controls['participant2'].hasError('required')">
+          Participant 2 is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="callForm.controls['participant2'].hasError('email')">
+          Value should be email
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button class="mat-primary" (click)="save()"
+    [disabled]="!validForm()"
+  >Create</button>
+</div>

@@ -9,6 +9,11 @@
         target="newMailWindow">{{getParticipants(call.participants).join(', ')}}</a></div>
   </li>
 </ul>
+
+<button mat-raised-button color="primary" (click)="openCreateCallDialog()">create new Call</button>
+
+
+
 <h3>Meetings</h3>
 
 <ul>
@@ -20,3 +25,5 @@
         target="newMailWindow">{{getParticipants(meeting.participants).join(', ')}}</a></div>
   </li>
 </ul>
+
+
