@@ -19,6 +19,14 @@ export function getIndex(arr: PSEvent[], newDate: Date) {
   return arr.length;
 }
 
+interface LocalState<T> {
+  nextId: number;
+  indexes: string[];
+  entities: {
+    [key: string]: T;
+  };
+}
+
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
@@ -29,20 +37,50 @@ export class EventListComponent {
   meetings: Meeting[];
   newCallId = 0;
 
+  callEventStore: LocalState<Call>;
+
   constructor(
     private eventService: EventService,
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog
   ) {
     this.eventService.getAll<Call>('calls').subscribe((events) => {
-      console.log('InMemEventsService calls[0]', typeof events[0].event_date);
       this.calls = events.slice(0, events.length + 1);
 
       this.newCallId = this.calls.length;
+      this.buildCallEventStore(events);
     });
+
     this.eventService.getAll<Meeting>('meetings').subscribe((events) => {
       this.meetings = events.slice(0, events.length + 1);
     });
+  }
+
+  buildCallEventStore(events: Call[]) {
+    this.callEventStore = this.buildStore<Call>(events, (e: Call) =>
+      formatDate(e.event_date, 'yyyy-MM-dd', this.locale)
+    );
+  }
+
+  private buildStore<T>(events: T[], getKey: (e: T) => string) {
+    const store = {
+      nextId: events.length,
+      indexes: [],
+      entities: {}
+    };
+
+    events.forEach((event: T) => {
+      const key = getKey(event);
+
+      if (!store.entities[key]) {
+        store.indexes.push(key);
+        store.entities[key] = [];
+      }
+
+      store.entities[key].push(event);
+    });
+
+    return store;
   }
 
   getParticipants(participants: any[]) {
@@ -86,7 +124,10 @@ export class EventListComponent {
         const id = (this.newCallId += 1);
         call.id = id;
         this.calls.splice(index, 0, call);
+
+        this.buildCallEventStore(this.calls);
       });
     });
   }
+
 }

@@ -1,0 +1,50 @@
+.inner-content {
+  text-align: left;
+}
+
+.timeline-content {
+  background-color: transparent;
+  box-shadow: none;
+
+  .date {
+    display: none;
+  }
+
+  &::after {
+    border-color: transparent transparent transparent #eee;
+  }
+}
+
+.timeline-item:nth-child(even) .timeline-content::after {
+  border-color: transparent #eee transparent transparent;
+}
+
+@media screen and (max-width: 1024px) {
+  .timeline .timeline-item:nth-child(odd) .timeline-content::after {
+    border-color: transparent #eee transparent transparent;
+  }
+}
+
+
+.timeline {
+  .timeline-content {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .inner-content {
+    margin-top: 0;
+
+    section {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.timeline-item:nth-child(odd) .timeline-content .inner-content {
+  margin-right: 0;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+  padding: 0;
+}

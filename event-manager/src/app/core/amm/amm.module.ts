@@ -5,6 +5,7 @@ import {
   MatCardModule,
   MatDatepickerModule,
   MatDialogModule,
+  MatDividerModule,
   MatIconModule,
   MatInputModule,
   MatNativeDateModule,
@@ -19,6 +20,7 @@ const ammModules = [
   MatDialogModule,
   MatNativeDateModule,
   MatSelectModule,
+  MatDividerModule,
   MatRadioModule,
   MatCardModule,
   MatIconModule
