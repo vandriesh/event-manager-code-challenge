@@ -2,7 +2,7 @@
   <h1 class="mat-h1">Calls</h1>
   <button mat-raised-button color="primary" (click)="openCreateCallDialog()" >
     <mat-icon aria-label="Example icon-button with a heart icon">call</mat-icon>
-    add new Call Event</button>
+    Add new Call Event</button>
 </div>
 
 <vertical-timeline *ngIf="callEventStore">
@@ -12,18 +12,7 @@
       [timeString]="callEventStore.entities[dateIndex][0].event_date | date:'MMM d'">
 
     <section *ngFor="let callEvent of callEventStore.entities[dateIndex]; let i = index">
-      <mat-card>
-        <mat-card-header>
-          <div mat-card-avatar><mat-icon>call</mat-icon></div>
-          <mat-card-title>{{callEvent.event_date | date:'HH:mm'}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div>Name: {{callEvent.name}}</div>
-          <div>created at: {{callEvent.created_date | date:'yyyy-MM-dd HH:mm'}}</div>
-          <div>participants : <a [href]="formatEmailLink(callEvent)"
-              target="newMailWindow">{{getParticipants(callEvent.participants).join(', ')}}</a></div>
-        </mat-card-content>
-      </mat-card>
+      <app-call-event [callEvent]="callEvent"></app-call-event>
     </section>
   </vertical-timeline-card>
 </vertical-timeline>
@@ -31,17 +20,21 @@
 
 
 
-<h3>Meetings</h3>
+<div style="padding: 0 5%">
+  <h1 class="mat-h1">Meetings</h1>
+  <button mat-raised-button color="primary" (click)="openCreateCallDialog()" >
+    <mat-icon aria-label="Example icon-button with a heart icon">chat</mat-icon>
+    Add new Meeting Event</button>
+</div>
 
-<ul>
-  <li *ngFor="let meetingEvent of meetings">
-    <div>Name: {{meetingEvent.name}}</div>
-    <div>created at: {{meetingEvent.created_date | date:'yyyy-MM-dd HH:mm'}}</div>
-    <div>scheduled for: {{meetingEvent.event_date | date:'yyyy-MM-dd HH:mm'}}</div>
-    <div>participants : <a [href]="formatEmailLink(meetingEvent)"
-        target="newMailWindow">{{getParticipants(meetingEvent.participants).join(', ')}}</a></div>
-    <div>locations: {{meetingEvent.address |json}}</div>
-  </li>
-</ul>
+<vertical-timeline *ngIf="meetingEventStore">
+  <vertical-timeline-card *ngFor="let dateIndex of meetingEventStore.indexes"
+      class="mat-elevation-z3"
+      [dateValue]="meetingEventStore.entities[dateIndex][0].event_date"
+      [timeString]="meetingEventStore.entities[dateIndex][0].event_date | date:'MMM d'">
 
-
+    <section *ngFor="let meetingEvent of meetingEventStore.entities[dateIndex]; let i = index">
+      <app-meeting-event [meetingEvent]="meetingEvent"></app-meeting-event>
+    </section>
+  </vertical-timeline-card>
+</vertical-timeline>

@@ -38,6 +38,7 @@ export class EventListComponent {
   newCallId = 0;
 
   callEventStore: LocalState<Call>;
+  meetingEventStore: LocalState<Meeting>;
 
   constructor(
     private eventService: EventService,
@@ -53,11 +54,18 @@ export class EventListComponent {
 
     this.eventService.getAll<Meeting>('meetings').subscribe((events) => {
       this.meetings = events.slice(0, events.length + 1);
+      this.buildMeetingsEventStore(events);
     });
   }
 
   buildCallEventStore(events: Call[]) {
     this.callEventStore = this.buildStore<Call>(events, (e: Call) =>
+      formatDate(e.event_date, 'yyyy-MM-dd', this.locale)
+    );
+  }
+
+  buildMeetingsEventStore(events: Meeting[]) {
+    this.meetingEventStore = this.buildStore<Meeting>(events, (e: Meeting) =>
       formatDate(e.event_date, 'yyyy-MM-dd', this.locale)
     );
   }
@@ -81,18 +89,6 @@ export class EventListComponent {
     });
 
     return store;
-  }
-
-  getParticipants(participants: any[]) {
-    return participants.map((participant: Participant) => participant.email);
-  }
-
-  formatEmailLink(call: Call | Meeting) {
-    const mailto = this.getParticipants(call.participants).join(',');
-    const date = formatDate(call.event_date, 'yyyy-mm-dd hh:mm', this.locale);
-    const bodyMessage = `You are invited to a meeting at ${date}`;
-
-    return `mailto:${mailto}?subject=${call.name}&body=${bodyMessage}`;
   }
 
   openCreateCallDialog() {
