@@ -1,4 +1,5 @@
 export interface PSEvent {
+  id: number;
   created_date: string;
   event_date: string;
   name: string;

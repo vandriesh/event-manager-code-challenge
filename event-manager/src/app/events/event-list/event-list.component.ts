@@ -3,8 +3,21 @@ import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CreateNewCallDialogComponent } from '../../calls/create-new-call-dialog/create-new-call-dialog.component';
 
-import { Call, Meeting, Participant } from '../event';
+import { Call, Meeting, Participant, PSEvent } from '../event';
 import { EventService } from '../event.service';
+
+export function getIndex(arr: PSEvent[], newDate: Date) {
+  for (let i = 0; i < arr.length; i++) {
+    const aDate = new Date(arr[i].event_date);
+    const diff = aDate.getTime() - newDate.getTime();
+
+    if (diff > 0) {
+      return i;
+    }
+  }
+
+  return arr.length;
+}
 
 @Component({
   selector: 'app-event-list',
@@ -14,7 +27,7 @@ import { EventService } from '../event.service';
 export class EventListComponent {
   calls: Call[];
   meetings: Meeting[];
-  newCall: Call;
+  newCallId = 0;
 
   constructor(
     private eventService: EventService,
@@ -22,7 +35,10 @@ export class EventListComponent {
     private dialog: MatDialog
   ) {
     this.eventService.getAll<Call>('calls').subscribe((events) => {
+      console.log('InMemEventsService calls[0]', typeof events[0].event_date);
       this.calls = events.slice(0, events.length + 1);
+
+      this.newCallId = this.calls.length;
     });
     this.eventService.getAll<Meeting>('meetings').subscribe((events) => {
       this.meetings = events.slice(0, events.length + 1);
@@ -44,12 +60,33 @@ export class EventListComponent {
   openCreateCallDialog() {
     const dialogRef = this.dialog.open(CreateNewCallDialogComponent, {
       autoFocus: true,
-      data: {  }
+      data: {}
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
-      this.newCall = result;
+    dialogRef.afterClosed().subscribe((newCall: any) => {
+      if (!newCall) {
+        return;
+      }
+
+      const { event_date, name, participants, hours, minutes } = newCall;
+
+      const index = getIndex(this.calls, event_date);
+      const event_date_and_time = new Date(event_date);
+      event_date_and_time.setHours(hours);
+      event_date_and_time.setMinutes(minutes);
+
+      const remasteredCall = {
+        name,
+        created_date: new Date().toISOString(),
+        event_date: event_date_and_time.toISOString(),
+        participants
+      };
+
+      this.eventService.add('calls', remasteredCall).subscribe((call: Call) => {
+        const id = (this.newCallId += 1);
+        call.id = id;
+        this.calls.splice(index, 0, call);
+      });
     });
   }
 }

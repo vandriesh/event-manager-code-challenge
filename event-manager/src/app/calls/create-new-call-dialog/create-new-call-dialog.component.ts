@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import * as faker from 'faker';
 
 const notEmptyAndValid = (control: AbstractControl) => control.value !== '' && control.valid;
 
@@ -19,11 +20,13 @@ export class CreateNewCallDialogComponent {
   ) {
     this.callForm = this.fb.group({
       name: [null, Validators.required],
-      event_date: [{disabled: true, value: new Date()}, Validators.required],
+      event_date: [new Date(), Validators.required],
       hours: [null, [Validators.required, Validators.min(0), Validators.max(23)]],
       minutes: [null, [Validators.required, Validators.min(0), Validators.max(59)]],
-      participant1: [null, [Validators.required, Validators.email]],
-      participant2: [null, [Validators.required, Validators.email]]
+      participants: this.fb.array([
+        this.createParticipant(''),
+        this.createParticipant('')
+      ])
     });
   }
 
@@ -39,9 +42,9 @@ export class CreateNewCallDialogComponent {
     return (
       notEmptyAndValid(this.callForm.controls['name']) &&
       notEmptyAndValid(this.callForm.controls['event_date']) &&
-      notEmptyAndValid(this.callForm.controls['event_time']) &&
-      notEmptyAndValid(this.callForm.controls['participant1']) &&
-      notEmptyAndValid(this.callForm.controls['participant2'])
+      notEmptyAndValid(this.callForm.controls['hours']) &&
+      notEmptyAndValid(this.callForm.controls['minutes']) &&
+      notEmptyAndValid(this.callForm.controls['participants'])
     );
   }
 
@@ -49,5 +52,11 @@ export class CreateNewCallDialogComponent {
     const control = this.callForm.controls[fieldName];
 
     return control.hasError('min') || control.hasError('max');
+  }
+
+  private createParticipant(email) {
+    return this.fb.group({
+      email: [email, [Validators.required, Validators.email]]
+    });
   }
 }

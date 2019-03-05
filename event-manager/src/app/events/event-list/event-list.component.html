@@ -1,12 +1,12 @@
 <h3>Calls</h3>
 
 <ul>
-  <li *ngFor="let call of calls">
-    <div>Name: {{call.name}}</div>
-    <div>created at: {{call.created_date | date}}</div>
-    <div>scheduled for: {{call.event_date | date}}</div>
-    <div>participants : <a [href]="formatEmailLink(call)"
-        target="newMailWindow">{{getParticipants(call.participants).join(', ')}}</a></div>
+  <li *ngFor="let callEvent of calls">
+    <div>Name: {{callEvent.name}}</div>
+    <div>created at: {{callEvent.created_date | date:'yyyy-MM-dd HH:mm'}}</div>
+    <div>scheduled for: {{callEvent.event_date | date:'yyyy-MM-dd HH:mm'}}</div>
+    <div>participants : <a [href]="formatEmailLink(callEvent)"
+        target="newMailWindow">{{getParticipants(callEvent.participants).join(', ')}}</a></div>
   </li>
 </ul>
 
@@ -17,12 +17,13 @@
 <h3>Meetings</h3>
 
 <ul>
-  <li *ngFor="let meeting of meetings">
-    <div>Name: {{meeting.name}}</div>
-    <div>created at: {{meeting.created_date | date}}</div>
-    <div>scheduled for: {{meeting.event_date | date}}</div>
-    <div>participants : <a [href]="formatEmailLink(meeting)"
-        target="newMailWindow">{{getParticipants(meeting.participants).join(', ')}}</a></div>
+  <li *ngFor="let meetingEvent of meetings">
+    <div>Name: {{meetingEvent.name}}</div>
+    <div>created at: {{meetingEvent.created_date | date:'yyyy-MM-dd HH:mm'}}</div>
+    <div>scheduled for: {{meetingEvent.event_date | date:'yyyy-MM-dd HH:mm'}}</div>
+    <div>participants : <a [href]="formatEmailLink(meetingEvent)"
+        target="newMailWindow">{{getParticipants(meetingEvent.participants).join(', ')}}</a></div>
+    <div>locations: {{meetingEvent.address |json}}</div>
   </li>
 </ul>
 

@@ -47,30 +47,21 @@
       </mat-form-field>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Participant 1" formControlName="participant1" required>
-        <mat-error *ngIf="callForm.controls['participant1'].hasError('required')">
-          Participant 1 is <strong>required</strong>
-        </mat-error>
-        <mat-error *ngIf="callForm.controls['participant1'].hasError('email')">
-          Value should be email
-        </mat-error>
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Participant 2" formControlName="participant2" required>
-        <mat-error *ngIf="callForm.controls['participant2'].hasError('required')">
-          Participant 2 is <strong>required</strong>
-        </mat-error>
-        <mat-error *ngIf="callForm.controls['participant2'].hasError('email')">
-          Value should be email
-        </mat-error>
-      </mat-form-field>
+
+  <div class="row" formArrayName="participants"
+      *ngFor="let participant of callForm.controls.participants?.controls; let i = index">
+    <div class="col" [formGroupName]="i">
+      <div class="full-width">
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Participant {{i + 1}}" formControlName="email" autocomplete="off">
+          <mat-error *ngIf="participant.controls['email'].hasError('required')">
+            Participant {{i+1}} is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="participant.controls['email'].hasError('email')">
+            Value should be email
+          </mat-error>
+        </mat-form-field>
+      </div>
     </div>
   </div>
 </div>
