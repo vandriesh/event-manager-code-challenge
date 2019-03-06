@@ -20,7 +20,9 @@ export class EventService<T extends PSEvent> {
   }
 
   save(entity: T): Observable<T> {
-    return this.http.put<T>(`/api/${entity.type}s/${entity.id}`, entity).pipe(catchError(this.handleError));
+    return this.http
+      .put<T>(`/api/${entity.type}s/${entity.id}`, entity)
+      .pipe(catchError(this.handleError));
   }
 
   formatEmailLink(call: PSEvent) {
@@ -31,6 +33,19 @@ export class EventService<T extends PSEvent> {
     return `mailto:${mailto}?subject=${call.name}&body=${bodyMessage}`;
   }
 
+  remove({ type, id }: T) {
+    return this.http.delete<T>(`/api/${type}s/${id}`).pipe(catchError(this.handleError));
+  }
+
+  combineDateWithTime(event_date: Date, time: { hours: number; minutes: number }): Date {
+    const { hours, minutes } = time;
+
+    event_date.setHours(hours);
+    event_date.setMinutes(minutes);
+
+    return event_date;
+  }
+
   private getParticipantWEmails(participants: any[]) {
     return participants.map((participant: Participant) => participant.email);
   }
@@ -38,9 +53,5 @@ export class EventService<T extends PSEvent> {
   private handleError(res: HttpErrorResponse | any) {
     console.error(res.error || res.body.error);
     return observableThrowError(res.error || 'Server error');
-  }
-
-  remove({type, id}: T) {
-    return this.http.delete<T>(`/api/${type}s/${id}`).pipe(catchError(this.handleError));
   }
 }

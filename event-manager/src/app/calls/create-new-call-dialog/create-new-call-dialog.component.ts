@@ -2,7 +2,14 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { Call, Meeting } from '../../events/event';
+
 const notEmptyAndValid = (control: AbstractControl) => control.value !== '' && control.valid;
+
+interface EventDialogData {
+  creating: boolean;
+  event: null | Call | Meeting;
+}
 
 @Component({
   selector: 'app-create-new-call-dialog',
@@ -12,28 +19,25 @@ const notEmptyAndValid = (control: AbstractControl) => control.value !== '' && c
 export class CreateNewCallDialogComponent {
   callForm: FormGroup;
   creating = false;
+  type: string;
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateNewCallDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: EventDialogData
   ) {
-    this.creating = data === null;
+    const { creating, event } = data;
 
-    if (data === null) {
-      data = {};
-      this.creating = true;
-    }
+    this.creating = creating;
+    const { name, event_date, participants, type } = event;
 
-    const { name, event_date } = data;
+    this.type = type;
     let hours = null;
     let minutes = null;
     let eventDate = new Date();
 
     if (event_date) {
       eventDate = event_date;
-      hours = eventDate.getHours();
-      minutes = eventDate.getMinutes();
     }
 
     if (hours < 10) {
@@ -42,13 +46,6 @@ export class CreateNewCallDialogComponent {
 
     if (minutes < 10) {
       minutes = '0' + minutes;
-    }
-
-    let { participants } = data;
-
-    if (!participants || !participants.length) {
-      const email = '';
-      participants = [{ email }, { email }];
     }
 
     this.callForm = this.fb.group({

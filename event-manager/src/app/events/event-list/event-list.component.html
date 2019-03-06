@@ -1,9 +1,9 @@
 <div style="padding: 20px 5% 0 5%">
   <h1 class="mat-h1">Events</h1>
-  <button mat-button color="primary" (click)="openCreateCallDialog(null)" >
+  <button mat-button color="primary" (click)="openCreateCallDialog()" >
     <mat-icon aria-label="Example icon-button with a heart icon">call</mat-icon>
     Add Call Event</button>
-  <button mat-button color="primary">
+  <button mat-button color="primary" (click)="openCreateMeetingDialog()">
     <mat-icon aria-label="Example icon-button with a heart icon">chat</mat-icon>
     Add Meeting Event</button>
 </div>
@@ -18,11 +18,13 @@
       <div [ngSwitch]="event.type">
         <app-event-view [event]="event" type="call" *ngSwitchCase="'call'"
           (onSend)="sendInvites(event)"
-          (onEdit)="editCallEvent(event)"
+          (onEdit)="editEvent(event)"
           (onDelete)="deleteEvent(event)"
         ></app-event-view>
         <app-event-view [event]="event" type="chat" *ngSwitchCase="'meeting'"
             (onDelete)="deleteEvent(event)"
+            (onEdit)="editEvent(event)"
+            (onSend)="sendInvites(event)"
         >
           <mat-list-item>
             <mat-icon>place</mat-icon> location: {{event.address | json}}

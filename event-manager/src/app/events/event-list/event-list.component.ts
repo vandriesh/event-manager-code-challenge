@@ -31,7 +31,7 @@ export class EventListComponent {
   eventStore: LocalState<Call | Meeting>;
 
   constructor(
-    private eventService: EventService<Call|Meeting>,
+    private eventService: EventService<Call | Meeting>,
     private storeService: StoreService,
     private dialog: MatDialog
   ) {
@@ -48,10 +48,13 @@ export class EventListComponent {
     });
   }
 
-  openCreateCallDialog() {
+  openCreateDialog(event: Call | Meeting) {
     const dialogRef = this.dialog.open(CreateNewCallDialogComponent, {
       autoFocus: true,
-      data: null
+      data: {
+        creating: true,
+        event
+      }
     });
 
     dialogRef.afterClosed().subscribe((newCall: any) => {
@@ -61,15 +64,13 @@ export class EventListComponent {
 
       const { event_date, name, participants, hours, minutes } = newCall;
 
-      event_date.setHours(hours);
-      event_date.setMinutes(minutes);
       const id = (this.newCallId += 1);
       const remasteredCall = <Call>{
+        ...event,
         id,
-        type: 'call',
         name,
         created_date: new Date(),
-        event_date,
+        event_date: this.eventService.combineDateWithTime(event_date, { hours, minutes }),
         participants
       };
 
@@ -80,10 +81,13 @@ export class EventListComponent {
     });
   }
 
-  openEditCallDialog(callEvent: Call) {
+  openEditDialog(callEvent: Call | Meeting) {
     const dialogRef = this.dialog.open(CreateNewCallDialogComponent, {
       autoFocus: true,
-      data: callEvent
+      data: {
+        creating: false,
+        event: callEvent
+      }
     });
 
     dialogRef.afterClosed().subscribe((newCall: any) => {
@@ -93,15 +97,11 @@ export class EventListComponent {
 
       const { event_date, name, participants, hours, minutes } = newCall;
 
-      const event_date_and_time = event_date;
-      event_date_and_time.setHours(hours);
-      event_date_and_time.setMinutes(minutes);
-
       const remasteredCall = {
         ...callEvent,
         name,
         created_date: new Date(),
-        event_date: event_date_and_time,
+        event_date: this.eventService.combineDateWithTime(event_date, { hours, minutes }),
         participants
       };
 
@@ -124,14 +124,32 @@ export class EventListComponent {
     window.open(this.eventService.formatEmailLink(participants));
   }
 
-  editCallEvent(callEvent: Call) {
-    this.openEditCallDialog(callEvent);
+  editEvent(event: Call | Meeting) {
+    this.openEditDialog(event);
   }
 
-  deleteEvent(event: Call|Meeting) {
+  deleteEvent(event: Call | Meeting) {
     this.eventService.remove(event).subscribe(() => {
       this.events = this.events.filter((item) => item.id !== event.id);
       this.eventStore = this.storeService.buildEventStore(this.events);
+    });
+  }
+
+  openCreateMeetingDialog() {
+    const email = '';
+
+    this.openCreateDialog(<Meeting>{
+      type: 'meeting',
+      participants: [{ email }, { email }, { email }]
+    });
+  }
+
+  openCreateCallDialog() {
+    const email = '';
+
+    this.openCreateDialog(<Call>{
+      type: 'call',
+      participants: [{ email }, { email }]
     });
   }
 }
