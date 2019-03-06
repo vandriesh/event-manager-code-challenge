@@ -8,19 +8,19 @@ import { Participant, PSEvent } from './event';
 @Injectable({
   providedIn: 'root'
 })
-export class EventService {
+export class EventService<T extends PSEvent> {
   constructor(private http: HttpClient, @Inject(LOCALE_ID) private locale: string) {}
 
-  getAll<T>(slug: string): Observable<T[]> {
-    return this.http.get<T[]>(`/api/${slug}`);
+  getAll(): Observable<T[]> {
+    return this.http.get<T[]>('/api/events');
   }
 
-  add<T>(slug: string, entity: T): Observable<T> {
-    return this.http.post<T>(`/api/${slug}`, entity).pipe(catchError(this.handleError));
+  add(entity: T): Observable<T> {
+    return this.http.post<T>(`/api/${entity.type}s`, entity).pipe(catchError(this.handleError));
   }
 
-  save<T>(slug: string, entity: T): Observable<T> {
-    return this.http.put<T>(`/api/${slug}`, entity).pipe(catchError(this.handleError));
+  save(entity: T): Observable<T> {
+    return this.http.put<T>(`/api/${entity.type}s/${entity.id}`, entity).pipe(catchError(this.handleError));
   }
 
   formatEmailLink(call: PSEvent) {
@@ -38,5 +38,9 @@ export class EventService {
   private handleError(res: HttpErrorResponse | any) {
     console.error(res.error || res.body.error);
     return observableThrowError(res.error || 'Server error');
+  }
+
+  remove({type, id}: T) {
+    return this.http.delete<T>(`/api/${type}s/${id}`).pipe(catchError(this.handleError));
   }
 }

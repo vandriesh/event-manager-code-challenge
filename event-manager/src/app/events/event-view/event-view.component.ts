@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PSEvent } from '../event';
 
 @Component({
@@ -6,15 +6,14 @@ import { PSEvent } from '../event';
   templateUrl: './event-view.component.html',
   styleUrls: ['./event-view.component.scss']
 })
-export class EventViewComponent implements OnInit {
+export class EventViewComponent {
   @Input() event: PSEvent;
   @Input() type: string;
   @Output() onSend = new EventEmitter();
   @Output() onEdit = new EventEmitter();
   @Output() onDelete = new EventEmitter();
-  constructor() {}
 
-  ngOnInit() {}
+  constructor() {}
 
   sendInvites() {
     this.onSend.emit();
@@ -23,6 +22,7 @@ export class EventViewComponent implements OnInit {
   triggerEdit() {
     this.onEdit.emit();
   }
+
   triggerDelete() {
     this.onDelete.emit();
   }

@@ -15,7 +15,7 @@
         </mat-list-item>
         <mat-list-item>
           <mat-icon matListIcon>watch_later</mat-icon>
-          created at: {{event.created_date | date | timeAgo}}
+          created at: {{event.created_date.toString() | timeAgo}}
         </mat-list-item>
         <ng-content></ng-content>
       </mat-list>
@@ -31,6 +31,8 @@
     <button mat-icon-button color="primary"
         (click)="triggerEdit()"
     ><mat-icon>edit</mat-icon></button>
-    <button mat-icon-button color="warn" style="float: right"><mat-icon>delete</mat-icon></button>
+    <button mat-icon-button color="warn" style="float: right"
+
+    (click)="triggerDelete()"><mat-icon>delete</mat-icon></button>
   </mat-card-actions>
 </mat-card>

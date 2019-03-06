@@ -8,7 +8,7 @@
     Add Meeting Event</button>
 </div>
 
-<vertical-timeline *ngIf="eventStore">
+<vertical-timeline *ngIf="eventStore && eventStore.indexes.length">
   <vertical-timeline-card *ngFor="let dateIndex of eventStore.indexes"
       class="mat-elevation-z3"
       [dateValue]="eventStore.entities[dateIndex][0].event_date"
@@ -19,8 +19,11 @@
         <app-event-view [event]="event" type="call" *ngSwitchCase="'call'"
           (onSend)="sendInvites(event)"
           (onEdit)="editCallEvent(event)"
+          (onDelete)="deleteEvent(event)"
         ></app-event-view>
-        <app-event-view [event]="event" type="chat" *ngSwitchCase="'meeting'">
+        <app-event-view [event]="event" type="chat" *ngSwitchCase="'meeting'"
+            (onDelete)="deleteEvent(event)"
+        >
           <mat-list-item>
             <mat-icon>place</mat-icon> location: {{event.address | json}}
           </mat-list-item>
@@ -29,3 +32,7 @@
     </section>
   </vertical-timeline-card>
 </vertical-timeline>
+
+<h4 *ngIf="!eventStore || !eventStore.indexes.length"
+ style="padding: 5%"
+>No events fro you!</h4>

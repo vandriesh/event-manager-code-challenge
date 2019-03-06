@@ -26,17 +26,16 @@ export function getIndex(arr: PSEvent[], newDate: Date) {
   styleUrls: ['./event-list.component.scss']
 })
 export class EventListComponent {
-  calls: Call[];
   events: (Meeting | Call)[];
   newCallId = 0;
   eventStore: LocalState<Call | Meeting>;
 
   constructor(
-    private eventService: EventService,
+    private eventService: EventService<Call|Meeting>,
     private storeService: StoreService,
     private dialog: MatDialog
   ) {
-    this.eventService.getAll<Call | Meeting>('events').subscribe((events: (Call | Meeting)[]) => {
+    this.eventService.getAll().subscribe((events: (Call | Meeting)[]) => {
       this.events = events.slice(0, events.length + 1).map((e) => {
         e.event_date = new Date(e.event_date);
         e.created_date = new Date(e.created_date);
@@ -67,15 +66,15 @@ export class EventListComponent {
       const id = (this.newCallId += 1);
       const remasteredCall = <Call>{
         id,
+        type: 'call',
         name,
         created_date: new Date(),
         event_date,
         participants
       };
 
-      this.eventService.add('calls', remasteredCall).subscribe((call: Call) => {
+      this.eventService.add(remasteredCall).subscribe(() => {
         this.events.push(remasteredCall);
-
         this.eventStore = this.storeService.buildEventStore(this.events);
       });
     });
@@ -114,7 +113,7 @@ export class EventListComponent {
         ...this.events.slice(index + 1)
       ];
 
-      this.eventService.save('calls', remasteredCall).subscribe(() => {
+      this.eventService.save(remasteredCall).subscribe(() => {
         this.events = updatedEvents;
         this.eventStore = this.storeService.buildEventStore(this.events);
       });
@@ -127,5 +126,12 @@ export class EventListComponent {
 
   editCallEvent(callEvent: Call) {
     this.openEditCallDialog(callEvent);
+  }
+
+  deleteEvent(event: Call|Meeting) {
+    this.eventService.remove(event).subscribe(() => {
+      this.events = this.events.filter((item) => item.id !== event.id);
+      this.eventStore = this.storeService.buildEventStore(this.events);
+    });
   }
 }
