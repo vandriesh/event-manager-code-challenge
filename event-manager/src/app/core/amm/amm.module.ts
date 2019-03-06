@@ -8,9 +8,11 @@ import {
   MatDividerModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatNativeDateModule,
   MatRadioModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTooltipModule
 } from '@angular/material';
 
 const ammModules = [
@@ -20,6 +22,8 @@ const ammModules = [
   MatDialogModule,
   MatNativeDateModule,
   MatSelectModule,
+  MatListModule,
+  MatTooltipModule,
   MatDividerModule,
   MatRadioModule,
   MatCardModule,

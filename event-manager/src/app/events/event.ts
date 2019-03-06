@@ -1,7 +1,9 @@
 export interface PSEvent {
+  type: string;
   id: number;
-  created_date: string;
-  event_date: string;
+  created_date: Date;
+  event_date: Date;
+  participants?: Participant[];
   name: string;
 }
 

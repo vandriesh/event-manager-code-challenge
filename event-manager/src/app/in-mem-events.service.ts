@@ -3,7 +3,7 @@ import * as faker from 'faker';
 
 import { Call, Meeting, Participant, PSEvent } from './events/event';
 
-function buildEvent(id: number): PSEvent {
+function buildEvent(id: number, type): PSEvent {
   const event_date = faker.date.future(0.01);
   const startDate = new Date(event_date);
   const endDate = new Date(event_date);
@@ -15,14 +15,15 @@ function buildEvent(id: number): PSEvent {
 
   return {
     id,
-    created_date: faker.date.past(0.5).toISOString(),
-    event_date: faker.date.between(startDate, endDate).toISOString(),
+    type,
+    created_date: faker.date.past(0.5),
+    event_date: faker.date.between(startDate, endDate),
     name: faker.company.bsBuzz()
   };
 }
 
 function buildCall(id): Call {
-  const event: PSEvent = buildEvent(id);
+  const event: PSEvent = buildEvent(id, 'call');
   const participant1: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
   const participant2: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
 
@@ -33,7 +34,7 @@ function buildCall(id): Call {
 }
 
 function buildMeeting(id): Meeting {
-  const event: PSEvent = buildEvent(id);
+  const event: PSEvent = buildEvent(id, 'meeting');
   const participant1: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
   const participant2: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
   const participant3: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
@@ -45,28 +46,22 @@ function buildMeeting(id): Meeting {
   };
 }
 
-function buildEntities<T>(builder) {
+function buildEntities<T>(builder, index) {
   const calls: T[] = [];
 
-  for (let i = 0; i < 5; i++) {
-    calls.push(builder(i));
+  for (let i = 0; i < 2; i++) {
+    calls.push(builder(index + i));
   }
 
   return calls;
 }
 
-function sortDescending({ event_date: a }: PSEvent, { event_date: b }: PSEvent) {
-  const aDate = new Date(a).getTime();
-  const bDate = new Date(b).getTime();
-
-  return aDate - bDate;
-}
-
 export class InMemEventsService implements InMemoryDbService {
   createDb() {
-    const calls: Call[] = buildEntities<Call>(buildCall).sort(sortDescending);
-    const meetings: Meeting[] = buildEntities<Meeting>(buildMeeting).sort(sortDescending);
+    const calls: Call[] = buildEntities<Call>(buildCall, 0);
+    const meetings: Meeting[] = buildEntities<Meeting>(buildMeeting, calls.length);
+    const events = [].concat(...calls, ...meetings);
 
-    return { calls, meetings };
+    return { calls, meetings, events };
   }
 }

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Create call event</h2>
+<h2 mat-dialog-title>{{creating?'Create':'Edit'}} call event</h2>
 <div mat-dialog-content [formGroup]="callForm">
   <div class="row">
     <div class="col">
@@ -68,6 +68,5 @@
 <div mat-dialog-actions>
   <button mat-button (click)="close()">Cancel</button>
   <button mat-button class="mat-primary" (click)="save()"
-    [disabled]="!validForm()"
-  >Create</button>
+      [disabled]="!validForm()">{{creating?'Create':'Save'}}</button>
 </div>

@@ -1,0 +1,36 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar><mat-icon color="primary">{{type}}</mat-icon></div>
+    <mat-card-title>{{event.name}}</mat-card-title>
+    <mat-card-subtitle>
+      <h3><mat-icon style="vertical-align: bottom">schedule</mat-icon>
+        {{event.event_date | date:'HH:mm'}}</h3>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div>Participants ({{event.participants.length}}):
+      <mat-list dense>
+        <mat-list-item *ngFor="let participant of event.participants">
+          <mat-icon matListIcon>contact_mail</mat-icon> {{participant.email}}
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListIcon>watch_later</mat-icon>
+          created at: {{event.created_date | date | timeAgo}}
+        </mat-list-item>
+        <ng-content></ng-content>
+      </mat-list>
+    </div>
+
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-icon-button matTooltip="Send invites to all participants"
+      (click)="sendInvites()"
+    >
+      <mat-icon>send</mat-icon>
+    </button>
+    <button mat-icon-button color="primary"
+        (click)="triggerEdit()"
+    ><mat-icon>edit</mat-icon></button>
+    <button mat-icon-button color="warn" style="float: right"><mat-icon>delete</mat-icon></button>
+  </mat-card-actions>
+</mat-card>

@@ -29,6 +29,7 @@
     "faker": "^4.1.0",
     "hammerjs": "^2.0.8",
     "rxjs": "~6.4.0",
+    "time-ago-pipe": "^1.3.2",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

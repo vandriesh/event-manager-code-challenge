@@ -1,40 +1,31 @@
 <div style="padding: 20px 5% 0 5%">
-  <h1 class="mat-h1">Calls</h1>
-  <button mat-raised-button color="primary" (click)="openCreateCallDialog()" >
+  <h1 class="mat-h1">Events</h1>
+  <button mat-button color="primary" (click)="openCreateCallDialog(null)" >
     <mat-icon aria-label="Example icon-button with a heart icon">call</mat-icon>
-    Add new Call Event</button>
-</div>
-
-<vertical-timeline *ngIf="callEventStore">
-  <vertical-timeline-card *ngFor="let dateIndex of callEventStore.indexes"
-      class="mat-elevation-z3"
-      [dateValue]="callEventStore.entities[dateIndex][0].event_date"
-      [timeString]="callEventStore.entities[dateIndex][0].event_date | date:'MMM d'">
-
-    <section *ngFor="let callEvent of callEventStore.entities[dateIndex]; let i = index">
-      <app-call-event [callEvent]="callEvent"></app-call-event>
-    </section>
-  </vertical-timeline-card>
-</vertical-timeline>
-
-
-
-
-<div style="padding: 0 5%">
-  <h1 class="mat-h1">Meetings</h1>
-  <button mat-raised-button color="primary" (click)="openCreateCallDialog()" >
+    Add Call Event</button>
+  <button mat-button color="primary">
     <mat-icon aria-label="Example icon-button with a heart icon">chat</mat-icon>
-    Add new Meeting Event</button>
+    Add Meeting Event</button>
 </div>
 
-<vertical-timeline *ngIf="meetingEventStore">
-  <vertical-timeline-card *ngFor="let dateIndex of meetingEventStore.indexes"
+<vertical-timeline *ngIf="eventStore">
+  <vertical-timeline-card *ngFor="let dateIndex of eventStore.indexes"
       class="mat-elevation-z3"
-      [dateValue]="meetingEventStore.entities[dateIndex][0].event_date"
-      [timeString]="meetingEventStore.entities[dateIndex][0].event_date | date:'MMM d'">
+      [dateValue]="eventStore.entities[dateIndex][0].event_date"
+      [timeString]="eventStore.entities[dateIndex][0].event_date | date:'MMM d'">
 
-    <section *ngFor="let meetingEvent of meetingEventStore.entities[dateIndex]; let i = index">
-      <app-meeting-event [meetingEvent]="meetingEvent"></app-meeting-event>
+    <section *ngFor="let event of eventStore.entities[dateIndex]">
+      <div [ngSwitch]="event.type">
+        <app-event-view [event]="event" type="call" *ngSwitchCase="'call'"
+          (onSend)="sendInvites(event)"
+          (onEdit)="editCallEvent(event)"
+        ></app-event-view>
+        <app-event-view [event]="event" type="chat" *ngSwitchCase="'meeting'">
+          <mat-list-item>
+            <mat-icon>place</mat-icon> location: {{event.address | json}}
+          </mat-list-item>
+        </app-event-view>
+      </div>
     </section>
   </vertical-timeline-card>
 </vertical-timeline>

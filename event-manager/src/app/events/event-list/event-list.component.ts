@@ -1,9 +1,10 @@
-import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { CreateNewCallDialogComponent } from '../../calls/create-new-call-dialog/create-new-call-dialog.component';
 
-import { Call, Meeting, Participant, PSEvent } from '../event';
+import { CreateNewCallDialogComponent } from '../../calls/create-new-call-dialog/create-new-call-dialog.component';
+import { LocalState } from '../../core/store/local-store';
+import { StoreService } from '../../core/store/store.service';
+import { Call, Meeting, PSEvent } from '../event';
 import { EventService } from '../event.service';
 
 export function getIndex(arr: PSEvent[], newDate: Date) {
@@ -19,14 +20,6 @@ export function getIndex(arr: PSEvent[], newDate: Date) {
   return arr.length;
 }
 
-interface LocalState<T> {
-  nextId: number;
-  indexes: string[];
-  entities: {
-    [key: string]: T;
-  };
-}
-
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
@@ -34,67 +27,32 @@ interface LocalState<T> {
 })
 export class EventListComponent {
   calls: Call[];
-  meetings: Meeting[];
+  events: (Meeting | Call)[];
   newCallId = 0;
-
-  callEventStore: LocalState<Call>;
-  meetingEventStore: LocalState<Meeting>;
+  eventStore: LocalState<Call | Meeting>;
 
   constructor(
     private eventService: EventService,
-    @Inject(LOCALE_ID) private locale: string,
+    private storeService: StoreService,
     private dialog: MatDialog
   ) {
-    this.eventService.getAll<Call>('calls').subscribe((events) => {
-      this.calls = events.slice(0, events.length + 1);
+    this.eventService.getAll<Call | Meeting>('events').subscribe((events: (Call | Meeting)[]) => {
+      this.events = events.slice(0, events.length + 1).map((e) => {
+        e.event_date = new Date(e.event_date);
+        e.created_date = new Date(e.created_date);
 
-      this.newCallId = this.calls.length;
-      this.buildCallEventStore(events);
+        return e;
+      });
+
+      this.eventStore = this.storeService.buildEventStore(events);
+      this.newCallId = events.length;
     });
-
-    this.eventService.getAll<Meeting>('meetings').subscribe((events) => {
-      this.meetings = events.slice(0, events.length + 1);
-      this.buildMeetingsEventStore(events);
-    });
-  }
-
-  buildCallEventStore(events: Call[]) {
-    this.callEventStore = this.buildStore<Call>(events, (e: Call) =>
-      formatDate(e.event_date, 'yyyy-MM-dd', this.locale)
-    );
-  }
-
-  buildMeetingsEventStore(events: Meeting[]) {
-    this.meetingEventStore = this.buildStore<Meeting>(events, (e: Meeting) =>
-      formatDate(e.event_date, 'yyyy-MM-dd', this.locale)
-    );
-  }
-
-  private buildStore<T>(events: T[], getKey: (e: T) => string) {
-    const store = {
-      nextId: events.length,
-      indexes: [],
-      entities: {}
-    };
-
-    events.forEach((event: T) => {
-      const key = getKey(event);
-
-      if (!store.entities[key]) {
-        store.indexes.push(key);
-        store.entities[key] = [];
-      }
-
-      store.entities[key].push(event);
-    });
-
-    return store;
   }
 
   openCreateCallDialog() {
     const dialogRef = this.dialog.open(CreateNewCallDialogComponent, {
       autoFocus: true,
-      data: {}
+      data: null
     });
 
     dialogRef.afterClosed().subscribe((newCall: any) => {
@@ -104,26 +62,70 @@ export class EventListComponent {
 
       const { event_date, name, participants, hours, minutes } = newCall;
 
-      const index = getIndex(this.calls, event_date);
-      const event_date_and_time = new Date(event_date);
-      event_date_and_time.setHours(hours);
-      event_date_and_time.setMinutes(minutes);
-
-      const remasteredCall = {
+      event_date.setHours(hours);
+      event_date.setMinutes(minutes);
+      const id = (this.newCallId += 1);
+      const remasteredCall = <Call>{
+        id,
         name,
-        created_date: new Date().toISOString(),
-        event_date: event_date_and_time.toISOString(),
+        created_date: new Date(),
+        event_date,
         participants
       };
 
       this.eventService.add('calls', remasteredCall).subscribe((call: Call) => {
-        const id = (this.newCallId += 1);
-        call.id = id;
-        this.calls.splice(index, 0, call);
+        this.events.push(remasteredCall);
 
-        this.buildCallEventStore(this.calls);
+        this.eventStore = this.storeService.buildEventStore(this.events);
       });
     });
   }
 
+  openEditCallDialog(callEvent: Call) {
+    const dialogRef = this.dialog.open(CreateNewCallDialogComponent, {
+      autoFocus: true,
+      data: callEvent
+    });
+
+    dialogRef.afterClosed().subscribe((newCall: any) => {
+      if (!newCall) {
+        return;
+      }
+
+      const { event_date, name, participants, hours, minutes } = newCall;
+
+      const event_date_and_time = event_date;
+      event_date_and_time.setHours(hours);
+      event_date_and_time.setMinutes(minutes);
+
+      const remasteredCall = {
+        ...callEvent,
+        name,
+        created_date: new Date(),
+        event_date: event_date_and_time,
+        participants
+      };
+
+      const index = this.events.findIndex((item) => item.id === callEvent.id);
+
+      const updatedEvents = [
+        ...this.events.slice(0, index),
+        remasteredCall,
+        ...this.events.slice(index + 1)
+      ];
+
+      this.eventService.save('calls', remasteredCall).subscribe(() => {
+        this.events = updatedEvents;
+        this.eventStore = this.storeService.buildEventStore(this.events);
+      });
+    });
+  }
+
+  sendInvites(participants: PSEvent) {
+    window.open(this.eventService.formatEmailLink(participants));
+  }
+
+  editCallEvent(callEvent: Call) {
+    this.openEditCallDialog(callEvent);
+  }
 }
