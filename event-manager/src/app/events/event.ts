@@ -6,6 +6,10 @@ export interface PSEvent {
   participants?: Participant[];
   name: string;
 }
+export interface PSGeo {
+  lat: number;
+  lng: number;
+}
 
 export interface Participant {
   email: string;
@@ -15,12 +19,7 @@ export interface Call extends PSEvent {
   participants: [Participant, Participant];
 }
 
-interface Geo {
-  lat: string;
-  lng: string;
-}
-
 export interface Meeting extends PSEvent {
   participants: [Participant, Participant, Participant];
-  address: Geo;
+  address: PSGeo;
 }

@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { CreateNewCallDialogComponent } from '../../calls/create-new-call-dialog/create-new-call-dialog.component';
 import { LocalState } from '../../core/store/local-store';
 import { StoreService } from '../../core/store/store.service';
+import { PickLocationDialogComponent } from '../../meetings/pick-location-dialog/pick-location-dialog.component';
 import { Call, Meeting, PSEvent } from '../event';
 import { EventService } from '../event.service';
 
@@ -33,7 +34,8 @@ export class EventListComponent {
   constructor(
     private eventService: EventService<Call | Meeting>,
     private storeService: StoreService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private mapDialog: MatDialog
   ) {
     this.eventService.getAll().subscribe((events: (Call | Meeting)[]) => {
       this.events = events.slice(0, events.length + 1).map((e) => {
@@ -105,18 +107,7 @@ export class EventListComponent {
         participants
       };
 
-      const index = this.events.findIndex((item) => item.id === callEvent.id);
-
-      const updatedEvents = [
-        ...this.events.slice(0, index),
-        remasteredCall,
-        ...this.events.slice(index + 1)
-      ];
-
-      this.eventService.save(remasteredCall).subscribe(() => {
-        this.events = updatedEvents;
-        this.eventStore = this.storeService.buildEventStore(this.events);
-      });
+      this.saveEvent(remasteredCall);
     });
   }
 
@@ -150,6 +141,38 @@ export class EventListComponent {
     this.openCreateDialog(<Call>{
       type: 'call',
       participants: [{ email }, { email }]
+    });
+  }
+
+  pickAddressDialog(event: Meeting) {
+
+    const dialogRef = this.mapDialog.open(PickLocationDialogComponent, {
+      width: '500px',
+      data: {} // event.address || {}
+    });
+
+    dialogRef.afterClosed().subscribe((newAddress: any) => {
+      if (newAddress === null) {
+        return;
+      }
+
+      this.saveEvent({...event, address: newAddress});
+    });
+  }
+
+  private saveEvent(event: Call|Meeting) {
+
+    const index = this.events.findIndex((item) => item.id === event.id);
+
+    const updatedEvents = [
+      ...this.events.slice(0, index),
+      event,
+      ...this.events.slice(index + 1)
+    ];
+
+    this.eventService.save(event).subscribe(() => {
+      this.events = updatedEvents;
+      this.eventStore = this.storeService.buildEventStore(this.events);
     });
   }
 }

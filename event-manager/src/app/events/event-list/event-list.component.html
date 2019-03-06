@@ -26,8 +26,18 @@
             (onEdit)="editEvent(event)"
             (onSend)="sendInvites(event)"
         >
-          <mat-list-item>
-            <mat-icon>place</mat-icon> location: {{event.address | json}}
+          <mat-list-item *ngIf="!event.address">
+              <mat-icon (click)="pickAddressDialog(event)"
+                  matTooltip="Pick location"
+                  color="warn"
+                  class="clickable-icon animated bounce">place</mat-icon>
+              pick one
+          </mat-list-item>
+          <mat-list-item *ngIf="event.address">
+              <mat-icon (click)="pickAddressDialog(event)"
+                  matTooltip="Show location"
+                  class="clickable-icon">place</mat-icon>
+              LAT: {{event.address.lat}}, LNG: {{event.address.lng}}
           </mat-list-item>
         </app-event-view>
       </div>

@@ -1,7 +1,9 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import * as faker from 'faker';
 
-import { Call, Meeting, Participant, PSEvent } from './events/event';
+import locations from './locations';
+
+import { Call, Meeting, Participant, PSEvent, PSGeo } from './events/event';
 
 function buildEvent(id: number, type): PSEvent {
   const event_date = faker.date.future(0.01);
@@ -33,16 +35,27 @@ function buildCall(id): Call {
   };
 }
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 function buildMeeting(id): Meeting {
   const event: PSEvent = buildEvent(id, 'meeting');
   const participant1: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
   const participant2: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
   const participant3: Participant = { email: faker.helpers.userCard().email.toLowerCase() };
 
-  return {
+  const locationIndex = getRandomInt(locations.length);
+  const randomLocation = locations[locationIndex];
+  const address: PSGeo = {
+    lat: randomLocation.lat,
+    lng: randomLocation.lng
+  };
+
+   return {
     ...event,
     participants: [participant1, participant2, participant3],
-    address: faker.helpers.createCard().address.geo
+    address
   };
 }
 
