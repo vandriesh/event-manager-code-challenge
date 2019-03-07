@@ -5,24 +5,30 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { AmmModule } from '../../core/amm/amm.module';
-import { Call } from '../../events/event';
+import { Call } from '../event';
 
 import { EventEditDialogComponent } from './event-edit-dialog.component';
-
-class NgZoneMock {
-  runOutsideAngular(fn: Function) {
-    return fn();
-  }
-
-  run(fn: Function) {
-    return fn();
-  }
-}
 
 function changeInput(input: HTMLInputElement, newValue) {
   input.value = newValue;
   input.dispatchEvent(new Event('input'));
 }
+
+// Noop component is only a workaround to trigger change detection
+@Component({
+  template: ''
+})
+class NoopComponent {}
+
+const TEST_DIRECTIVES = [EventEditDialogComponent, NoopComponent];
+
+@NgModule({
+  declarations: [...TEST_DIRECTIVES],
+  entryComponents: [EventEditDialogComponent],
+  exports: [...TEST_DIRECTIVES],
+  imports: [AmmModule, ReactiveFormsModule]
+})
+class DialogTestModule {}
 
 describe('EventEditDialogComponent', () => {
   let dialog: MatDialog;
@@ -36,14 +42,13 @@ describe('EventEditDialogComponent', () => {
   beforeEach(() => {
     const email = '';
     mockCreateCallEvent = <Call>{
-      type: 'call',
-      participants: [{ email }, { email }]
+      participants: [{ email }, { email }],
+      type: 'call'
     };
     mockEvent = <Call>{
-      type: 'call',
-      name: 'qwe',
       created_date,
       event_date,
+      name: 'qwe',
       participants: [
         {
           email: 'qwe1@qwe.com'
@@ -51,7 +56,8 @@ describe('EventEditDialogComponent', () => {
         {
           email: 'qwe2@qwe.com'
         }
-      ]
+      ],
+      type: 'call'
     };
 
     TestBed.configureTestingModule({
@@ -146,7 +152,6 @@ describe('EventEditDialogComponent', () => {
       expect(primaryButton.disabled).toBeFalsy();
     });
 
-
     it('should return new values to the invoker', (done) => {
       const name = 'newName';
       const year = 2020;
@@ -164,10 +169,10 @@ describe('EventEditDialogComponent', () => {
 
       dialogRef.afterClosed().subscribe((formVal) => {
         expect(formVal).toEqual({
-          name,
           event_date: new Date(`${month}/${day}/${year}`),
           hours,
           minutes,
+          name,
           participants: [
             {
               email: 'johny1@gmail'
@@ -207,19 +212,3 @@ describe('EventEditDialogComponent', () => {
     primaryButton.item(0).click();
   });
 });
-
-// Noop component is only a workaround to trigger change detection
-@Component({
-  template: ''
-})
-class NoopComponent {}
-
-const TEST_DIRECTIVES = [EventEditDialogComponent, NoopComponent];
-
-@NgModule({
-  imports: [AmmModule, ReactiveFormsModule],
-  exports: [...TEST_DIRECTIVES],
-  declarations: [...TEST_DIRECTIVES],
-  entryComponents: [EventEditDialogComponent]
-})
-class DialogTestModule {}

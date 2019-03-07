@@ -1,5 +1,3 @@
-
-
 <h2 mat-dialog-title>Meeting Location</h2>
 <div mat-dialog-content>
     <agm-map style="height:500px" [zoom]='10' [latitude]="marker.lat" [longitude]="marker.lng"
@@ -16,5 +14,5 @@
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="close()">Close</button>
-    <button mat-button (click)="save()">Save</button>
+    <button mat-button (click)="save()" [disabled]="!changed">Save</button>
 </div>

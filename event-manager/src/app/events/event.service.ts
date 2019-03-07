@@ -3,10 +3,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { throwError as observableThrowError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
 import { Participant, PSEvent } from './event';
 
 @Injectable({
-  providedIn: 'root'
+  'providedIn': 'root'
 })
 export class EventService<T extends PSEvent> {
   constructor(private http: HttpClient, @Inject(LOCALE_ID) private locale: string) {}

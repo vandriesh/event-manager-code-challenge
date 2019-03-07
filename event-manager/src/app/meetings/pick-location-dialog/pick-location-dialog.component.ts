@@ -1,6 +1,7 @@
 import { MouseEvent } from '@agm/core';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
 import { PSGeo } from '../../events/event';
 
 // just an interface for type safety.
@@ -13,22 +14,23 @@ interface Marker {
 
 @Component({
   selector: 'app-pick-location-dialog',
-  templateUrl: './pick-location-dialog.component.html',
-  styleUrls: ['./pick-location-dialog.component.scss']
+  styleUrls: ['./pick-location-dialog.component.scss'],
+  templateUrl: './pick-location-dialog.component.html'
 })
 export class PickLocationDialogComponent implements OnInit {
   marker: Marker;
+  changed = false;
 
   constructor(
     public dialogRef: MatDialogRef<PickLocationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PSGeo
   ) {
-    const { lat = 47.005, lng = 28.8577 } = data;
+    const { lat, lng } = data;
 
     this.marker = {
+      draggable: true,
       lat: lat,
-      lng: lng,
-      draggable: true
+      lng: lng
     };
   }
 
@@ -48,5 +50,6 @@ export class PickLocationDialogComponent implements OnInit {
   updateLocation($event: MouseEvent) {
     this.marker.lat = $event.coords.lat;
     this.marker.lng = $event.coords.lng;
+    this.changed = true;
   }
 }

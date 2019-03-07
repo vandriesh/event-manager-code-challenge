@@ -1,23 +1,13 @@
 import { LayoutModule } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
+
+import { AmmModule } from '../core/amm/amm.module';
+
 import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
   declarations: [NavigationComponent],
-  imports: [
-    CommonModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule
-  ],
-  exports: [
-    NavigationComponent
-  ]
+  exports: [NavigationComponent],
+  imports: [AmmModule, LayoutModule]
 })
-export class PSLayoutModule {
-}
+export class PSLayoutModule {}

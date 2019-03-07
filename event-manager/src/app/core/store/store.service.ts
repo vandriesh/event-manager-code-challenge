@@ -1,7 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
-import { Call, Meeting, PSEvent } from '../../events/event';
 
+import { Call, Meeting, PSEvent } from '../../events/event';
 
 export function sortDescending({ event_date: a }: PSEvent, { event_date: b }: PSEvent) {
   const aDate = a.getTime();
@@ -27,9 +27,9 @@ export class StoreService {
 
   private buildStore<T>(events: T[], getKey: (e: T) => string) {
     const store = {
-      nextId: events.length,
+      entities: {},
       indexes: [],
-      entities: {}
+      nextId: events.length
     };
 
     events.forEach((event: T) => {

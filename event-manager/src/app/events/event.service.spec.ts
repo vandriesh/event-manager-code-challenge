@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { Call, Meeting } from './event';
 
+import { Call, Meeting } from './event';
 import { EventService } from './event.service';
 
 describe('EventService', () => {
@@ -15,8 +15,8 @@ describe('EventService', () => {
     service = TestBed.get(EventService);
 
     event = {
-      name: 'qwe',
       event_date: new Date('February 02, 2019 01:01:01'),
+      name: 'qwe',
       participants: [
         {
           email: 'qwe1@qwe.com'

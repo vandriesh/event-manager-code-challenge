@@ -16,11 +16,11 @@ function buildEvent(id: number, type): PSEvent {
   endDate.setMinutes(0);
 
   return {
-    id,
-    type,
     created_date: faker.date.past(0.5),
     event_date: faker.date.between(startDate, endDate),
-    name: faker.company.bsBuzz()
+    id,
+    name: faker.company.bsBuzz(),
+    type
   };
 }
 
@@ -52,10 +52,10 @@ function buildMeeting(id): Meeting {
     lng: randomLocation.lng
   };
 
-   return {
+  return {
     ...event,
-    participants: [participant1, participant2, participant3],
-    address
+    address,
+    participants: [participant1, participant2, participant3]
   };
 }
 

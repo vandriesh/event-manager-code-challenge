@@ -10,10 +10,11 @@ import { InMemEventsService } from './in-mem-events.service';
 import { PSLayoutModule } from './ps-layout/layout.module';
 
 @NgModule({
-  declarations: [
+  'bootstrap': [AppComponent],
+  'declarations': [
     AppComponent
   ],
-  imports: [
+  'imports': [
     BrowserModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemEventsService),
@@ -21,7 +22,6 @@ import { PSLayoutModule } from './ps-layout/layout.module';
     PSLayoutModule,
     BrowserAnimationsModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  'providers': []
 })
 export class AppModule { }

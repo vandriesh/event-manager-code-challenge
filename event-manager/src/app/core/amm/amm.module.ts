@@ -35,8 +35,8 @@ const ammModules = [
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, ...ammModules],
   exports: [BrowserAnimationsModule, ...ammModules],
+  imports: [CommonModule, ...ammModules],
   providers: [MatDatepickerModule]
 })
 export class AmmModule {}

@@ -13,8 +13,8 @@ interface EventDialogData {
 
 @Component({
   selector: 'app-event-edit-dialog',
-  templateUrl: './event-edit-dialog.component.html',
-  styleUrls: ['./event-edit-dialog.component.scss']
+  styleUrls: ['./event-edit-dialog.component.scss'],
+  templateUrl: './event-edit-dialog.component.html'
 })
 export class EventEditDialogComponent {
   callForm: FormGroup;
@@ -52,10 +52,10 @@ export class EventEditDialogComponent {
     }
 
     this.callForm = this.fb.group({
-      name: [name, Validators.required],
       event_date: [eventDate, Validators.required],
       hours: [hours, [Validators.required, Validators.min(0), Validators.max(23)]],
       minutes: [minutes, [Validators.required, Validators.min(0), Validators.max(59)]],
+      name: [name, Validators.required],
       participants: this.fb.array(participants.map(({ email }) => this.createParticipant(email)))
     });
   }

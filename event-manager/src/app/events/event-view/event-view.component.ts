@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { PSEvent } from '../event';
 
 @Component({
   selector: 'app-event-view',
-  templateUrl: './event-view.component.html',
-  styleUrls: ['./event-view.component.scss']
+  styleUrls: ['./event-view.component.scss'],
+  templateUrl: './event-view.component.html'
 })
 export class EventViewComponent {
   @Input() event: PSEvent;

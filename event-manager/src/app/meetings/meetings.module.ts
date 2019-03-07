@@ -8,14 +8,16 @@ import { PickLocationDialogComponent } from './pick-location-dialog/pick-locatio
 
 @NgModule({
   declarations: [PickLocationDialogComponent],
+  entryComponents: [PickLocationDialogComponent],
   exports: [PickLocationDialogComponent],
-  imports: [CommonModule, AmmModule,
+  imports: [
+    CommonModule,
+    AmmModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
       apiKey: 'AIzaSyCSIFuXPQXel1splGkx5ElXoU1bL60Jn-I'
     })
-  ],
-  entryComponents: [PickLocationDialogComponent]
+  ]
 })
 export class MeetingsModule {}

@@ -19,8 +19,9 @@ describe('EventViewComponent', () => {
   let component: EventViewComponent;
   let fixture: ComponentFixture<EventViewComponent>;
   const mockEvent = {
+    created_date: new Date('February 01, 2018 11:12:13'),
+    event_date: new Date('February 02, 2019 01:02:03'),
     id: 1,
-    type: 'call',
     name: 'qwe call event',
     participants: [
       {
@@ -30,13 +31,12 @@ describe('EventViewComponent', () => {
         email: 'johny1@hotmail'
       }
     ],
-    created_date: new Date('February 01, 2018 11:12:13'),
-    event_date: new Date('February 02, 2019 01:02:03')
+    type: 'call'
   };
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AmmModule],
-      declarations: [EventViewComponent, TimeAgoPipe]
+      declarations: [EventViewComponent, TimeAgoPipe],
+      imports: [AmmModule]
     }).compileComponents();
   }));
 
