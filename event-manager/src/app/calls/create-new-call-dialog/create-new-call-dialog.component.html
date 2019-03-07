@@ -2,7 +2,7 @@
 <div mat-dialog-content [formGroup]="callForm">
   <div class="row">
     <div class="col">
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width 123 field-name 123">
         <input matInput placeholder="Name" formControlName="name" required autocomplete="off">
         <mat-error *ngIf="callForm.controls['name'].hasError('required')">
           Name field is <strong>required</strong>
@@ -12,7 +12,7 @@
   </div>
   <div class="row">
     <div class="col">
-      <mat-form-field>
+      <mat-form-field class="field-date">
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="event_date"
             autocomplete="off">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -20,7 +20,7 @@
       </mat-form-field>
     </div>
     <div class="col time-picker">
-      <mat-form-field >
+      <mat-form-field class="field-hours">
         <input matInput placeholder="hh" formControlName="hours" required
             min="0" max="23"
             type="number" autocomplete="off">
@@ -34,7 +34,7 @@
     </div>
     <div class="col middle-col">:</div>
     <div class="col time-picker">
-      <mat-form-field >
+      <mat-form-field  class="field-minutes">
         <input matInput placeholder="mm" formControlName="minutes" required
             min="0" max="59"
             type="number" autocomplete="off">
@@ -52,7 +52,7 @@
       *ngFor="let participant of callForm.controls.participants?.controls; let i = index">
     <div class="col" [formGroupName]="i">
       <div class="full-width">
-        <mat-form-field class="full-width">
+        <mat-form-field class="full-width field-participant-{{i}}">
           <input matInput placeholder="Participant {{i + 1}}" formControlName="email" autocomplete="off">
           <mat-error *ngIf="participant.controls['email'].hasError('required')">
             Participant {{i+1}} is <strong>required</strong>

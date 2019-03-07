@@ -9,21 +9,21 @@ import { PSEvent } from '../event';
 export class EventViewComponent {
   @Input() event: PSEvent;
   @Input() type: string;
-  @Output() onSend = new EventEmitter();
-  @Output() onEdit = new EventEmitter();
-  @Output() onDelete = new EventEmitter();
+  @Output() sendInvitation = new EventEmitter();
+  @Output() editEvent = new EventEmitter();
+  @Output() deleteEvent = new EventEmitter();
 
   constructor() {}
 
   sendInvites() {
-    this.onSend.emit();
+    this.sendInvitation.emit();
   }
 
   triggerEdit() {
-    this.onEdit.emit();
+    this.editEvent.emit();
   }
 
   triggerDelete() {
-    this.onDelete.emit();
+    this.deleteEvent.emit();
   }
 }

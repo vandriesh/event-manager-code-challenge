@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import {
   MatButtonModule,
   MatCardModule,
+  MatChipsModule,
   MatDatepickerModule,
   MatDialogModule,
   MatDividerModule,
@@ -14,26 +15,28 @@ import {
   MatSelectModule,
   MatTooltipModule
 } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const ammModules = [
-  MatInputModule,
   MatButtonModule,
+  MatCardModule,
+  MatChipsModule,
   MatDatepickerModule,
   MatDialogModule,
-  MatNativeDateModule,
-  MatSelectModule,
-  MatListModule,
-  MatTooltipModule,
   MatDividerModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatNativeDateModule,
   MatRadioModule,
-  MatCardModule,
-  MatIconModule
+  MatSelectModule,
+  MatTooltipModule
 ];
 
 @NgModule({
   declarations: [],
   imports: [CommonModule, ...ammModules],
-  exports: [...ammModules],
+  exports: [BrowserAnimationsModule, ...ammModules],
   providers: [MatDatepickerModule]
 })
 export class AmmModule {}

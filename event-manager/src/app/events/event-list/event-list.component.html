@@ -17,14 +17,14 @@
     <section *ngFor="let event of eventStore.entities[dateIndex]">
       <div [ngSwitch]="event.type">
         <app-event-view [event]="event" type="call" *ngSwitchCase="'call'"
-          (onSend)="sendInvites(event)"
-          (onEdit)="editEvent(event)"
-          (onDelete)="deleteEvent(event)"
+            (sendInvitation)="sendInvites(event)"
+            (editEvent)="editEvent(event)"
+            (deleteEvent)="deleteEvent(event)"
         ></app-event-view>
         <app-event-view [event]="event" type="chat" *ngSwitchCase="'meeting'"
-            (onDelete)="deleteEvent(event)"
-            (onEdit)="editEvent(event)"
-            (onSend)="sendInvites(event)"
+            (deleteEvent)="deleteEvent(event)"
+            (editEvent)="editEvent(event)"
+            (sendInvitation)="sendInvites(event)"
         >
           <mat-list-item *ngIf="!event.address">
               <mat-icon (click)="pickAddressDialog(event)"

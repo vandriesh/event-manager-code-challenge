@@ -9,29 +9,31 @@
   </mat-card-header>
   <mat-card-content>
     <div>Participants ({{event.participants?.length}}):
+      <mat-chip-list>
       <mat-list dense>
         <mat-list-item *ngFor="let participant of event.participants">
-          <mat-icon matListIcon>contact_mail</mat-icon> {{participant.email}}
+          <mat-icon matListIcon>contact_mail</mat-icon> <mat-chip>{{participant.email}}</mat-chip>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item class="created-info">
           <mat-icon matListIcon>watch_later</mat-icon>
           created at: {{event.created_date.toString() | timeAgo}}
         </mat-list-item>
         <ng-content></ng-content>
       </mat-list>
+      </mat-chip-list>
     </div>
 
   </mat-card-content>
   <mat-card-actions>
     <button mat-icon-button matTooltip="Send invites to all participants"
-      (click)="sendInvites()"
+      (click)="sendInvites()" class="button-send"
     >
       <mat-icon>send</mat-icon>
     </button>
-    <button mat-icon-button color="primary"
+    <button mat-icon-button color="primary" class="button-edit"
         (click)="triggerEdit()"
     ><mat-icon>edit</mat-icon></button>
-    <button mat-icon-button color="warn" style="float: right"
+    <button mat-icon-button color="warn" class="button-delete"
 
     (click)="triggerDelete()"><mat-icon>delete</mat-icon></button>
   </mat-card-actions>

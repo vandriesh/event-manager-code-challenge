@@ -38,6 +38,8 @@ export class CreateNewCallDialogComponent {
 
     if (event_date) {
       eventDate = event_date;
+      hours = eventDate.getHours();
+      minutes = eventDate.getMinutes();
     }
 
     if (hours < 10) {

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -9,6 +8,6 @@ import { CreateNewCallDialogComponent } from './create-new-call-dialog/create-ne
   declarations: [CreateNewCallDialogComponent],
   exports: [CreateNewCallDialogComponent],
   entryComponents: [CreateNewCallDialogComponent],
-  imports: [CommonModule, AmmModule, ReactiveFormsModule]
+  imports: [AmmModule, ReactiveFormsModule]
 })
 export class CallsModule {}

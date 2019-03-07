@@ -135,7 +135,7 @@ export class EventListComponent {
 
     const dialogRef = this.mapDialog.open(PickLocationDialogComponent, {
       width: '500px',
-      data: {} // event.address || {}
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe((newAddress: any) => {
