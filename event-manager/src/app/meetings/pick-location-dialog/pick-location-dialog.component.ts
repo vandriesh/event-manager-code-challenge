@@ -18,7 +18,6 @@ interface Marker {
 })
 export class PickLocationDialogComponent implements OnInit {
   marker: Marker;
-  changed = false;
 
   constructor(
     public dialogRef: MatDialogRef<PickLocationDialogComponent>,
@@ -49,6 +48,5 @@ export class PickLocationDialogComponent implements OnInit {
   updateLocation($event: MouseEvent) {
     this.marker.lat = $event.coords.lat;
     this.marker.lng = $event.coords.lng;
-    this.changed = true;
   }
 }

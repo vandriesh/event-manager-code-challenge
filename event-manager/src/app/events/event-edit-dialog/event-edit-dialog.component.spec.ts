@@ -7,7 +7,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { AmmModule } from '../../core/amm/amm.module';
 import { Call } from '../../events/event';
 
-import { CreateNewCallDialogComponent } from './create-new-call-dialog.component';
+import { EventEditDialogComponent } from './event-edit-dialog.component';
 
 class NgZoneMock {
   runOutsideAngular(fn: Function) {
@@ -24,7 +24,7 @@ function changeInput(input: HTMLInputElement, newValue) {
   input.dispatchEvent(new Event('input'));
 }
 
-describe('CreateNewCallDialogComponent', () => {
+describe('EventEditDialogComponent', () => {
   let dialog: MatDialog;
   let overlayContainerElement: HTMLElement;
   let mockEvent: Call;
@@ -74,7 +74,7 @@ describe('CreateNewCallDialogComponent', () => {
   });
 
   it('should have create title and create (disabled) button when creating event', () => {
-    dialog.open(CreateNewCallDialogComponent, {
+    dialog.open(EventEditDialogComponent, {
       data: {
         creating: true,
         event: mockCreateCallEvent
@@ -98,7 +98,7 @@ describe('CreateNewCallDialogComponent', () => {
     let dialogTitle: HTMLHeadElement;
     let nameField: HTMLInputElement;
     let dateField: HTMLInputElement;
-    let dialogRef: MatDialogRef<CreateNewCallDialogComponent>;
+    let dialogRef: MatDialogRef<EventEditDialogComponent>;
     let hoursField: HTMLInputElement;
     let minutesField: HTMLInputElement;
     let participant1Field: HTMLInputElement;
@@ -106,7 +106,7 @@ describe('CreateNewCallDialogComponent', () => {
     let primaryButton: HTMLButtonElement;
 
     beforeEach(() => {
-      dialogRef = dialog.open(CreateNewCallDialogComponent, {
+      dialogRef = dialog.open(EventEditDialogComponent, {
         data: {
           event: mockEvent
         }
@@ -186,7 +186,7 @@ describe('CreateNewCallDialogComponent', () => {
   });
 
   it('should close the dialog when cancel', (done) => {
-    const dialogRef = dialog.open(CreateNewCallDialogComponent, {
+    const dialogRef = dialog.open(EventEditDialogComponent, {
       data: {
         event: mockEvent
       }
@@ -214,12 +214,12 @@ describe('CreateNewCallDialogComponent', () => {
 })
 class NoopComponent {}
 
-const TEST_DIRECTIVES = [CreateNewCallDialogComponent, NoopComponent];
+const TEST_DIRECTIVES = [EventEditDialogComponent, NoopComponent];
 
 @NgModule({
   imports: [AmmModule, ReactiveFormsModule],
   exports: [...TEST_DIRECTIVES],
   declarations: [...TEST_DIRECTIVES],
-  entryComponents: [CreateNewCallDialogComponent]
+  entryComponents: [EventEditDialogComponent]
 })
 class DialogTestModule {}

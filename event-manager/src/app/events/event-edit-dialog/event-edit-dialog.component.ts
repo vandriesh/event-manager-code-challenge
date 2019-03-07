@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { Call, Meeting } from '../../events/event';
+import { Call, Meeting } from '../event';
 
 const notEmptyAndValid = (control: AbstractControl) => control.value !== '' && control.valid;
 
@@ -12,18 +12,19 @@ interface EventDialogData {
 }
 
 @Component({
-  selector: 'app-create-new-call-dialog',
-  templateUrl: './create-new-call-dialog.component.html',
-  styleUrls: ['./create-new-call-dialog.component.scss']
+  selector: 'app-event-edit-dialog',
+  templateUrl: './event-edit-dialog.component.html',
+  styleUrls: ['./event-edit-dialog.component.scss']
 })
-export class CreateNewCallDialogComponent {
+export class EventEditDialogComponent {
   callForm: FormGroup;
   creating = false;
   type: string;
+  today = new Date();
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<CreateNewCallDialogComponent>,
+    public dialogRef: MatDialogRef<EventEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EventDialogData
   ) {
     const { creating, event } = data;
@@ -40,14 +41,14 @@ export class CreateNewCallDialogComponent {
       eventDate = event_date;
       hours = eventDate.getHours();
       minutes = eventDate.getMinutes();
-    }
 
-    if (hours < 10) {
-      hours = '0' + hours;
-    }
+      if (hours < 10) {
+        hours = '0' + hours;
+      }
 
-    if (minutes < 10) {
-      minutes = '0' + minutes;
+      if (minutes < 10) {
+        minutes = '0' + minutes;
+      }
     }
 
     this.callForm = this.fb.group({

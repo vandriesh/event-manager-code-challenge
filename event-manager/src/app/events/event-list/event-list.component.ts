@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { CreateNewCallDialogComponent } from '../../calls/create-new-call-dialog/create-new-call-dialog.component';
+import { EventEditDialogComponent } from '../event-edit-dialog/event-edit-dialog.component';
 import { LocalState } from '../../core/store/local-store';
 import { StoreService } from '../../core/store/store.service';
 import { PickLocationDialogComponent } from '../../meetings/pick-location-dialog/pick-location-dialog.component';
@@ -38,7 +38,7 @@ export class EventListComponent {
   }
 
   openCreateDialog(event: Call | Meeting) {
-    const dialogRef = this.dialog.open(CreateNewCallDialogComponent, {
+    const dialogRef = this.dialog.open(EventEditDialogComponent, {
       autoFocus: true,
       data: {
         creating: true,
@@ -71,7 +71,7 @@ export class EventListComponent {
   }
 
   openEditDialog(callEvent: Call | Meeting) {
-    const dialogRef = this.dialog.open(CreateNewCallDialogComponent, {
+    const dialogRef = this.dialog.open(EventEditDialogComponent, {
       autoFocus: true,
       data: {
         creating: false,
