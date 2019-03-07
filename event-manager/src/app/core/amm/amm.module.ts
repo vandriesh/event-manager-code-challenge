@@ -13,6 +13,7 @@ import {
   MatNativeDateModule,
   MatRadioModule,
   MatSelectModule,
+  MatToolbarModule,
   MatTooltipModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,6 +22,7 @@ const ammModules = [
   MatButtonModule,
   MatCardModule,
   MatChipsModule,
+  MatToolbarModule,
   MatDatepickerModule,
   MatDialogModule,
   MatDividerModule,

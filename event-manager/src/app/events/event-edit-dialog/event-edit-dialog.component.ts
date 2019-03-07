@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Call, Meeting } from '../event';
@@ -88,5 +88,9 @@ export class EventEditDialogComponent {
     return this.fb.group({
       email: [email, [Validators.required, Validators.email]]
     });
+  }
+
+  getControls(frmGrp: FormGroup, key: string) {
+    return (<FormArray>frmGrp.controls[key]).controls;
   }
 }

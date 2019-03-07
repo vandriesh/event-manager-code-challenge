@@ -14,30 +14,14 @@ function changeInput(input: HTMLInputElement, newValue) {
   input.dispatchEvent(new Event('input'));
 }
 
-// Noop component is only a workaround to trigger change detection
-@Component({
-  template: ''
-})
-class NoopComponent {}
-
-const TEST_DIRECTIVES = [EventEditDialogComponent, NoopComponent];
-
-@NgModule({
-  declarations: [...TEST_DIRECTIVES],
-  entryComponents: [EventEditDialogComponent],
-  exports: [...TEST_DIRECTIVES],
-  imports: [AmmModule, ReactiveFormsModule]
-})
-class DialogTestModule {}
-
 describe('EventEditDialogComponent', () => {
   let dialog: MatDialog;
   let overlayContainerElement: HTMLElement;
   let mockEvent: Call;
   let mockCreateCallEvent: Call;
   let noop: ComponentFixture<NoopComponent>;
-  const created_date = new Date('February 02, 2019 01:02:03');
-  const event_date = new Date('February 02, 2019 01:02:03');
+  const created_date = new Date('February 02, 2020 01:02:03');
+  const event_date = new Date('February 02, 2020 01:02:03');
 
   beforeEach(() => {
     const email = '';
@@ -45,9 +29,10 @@ describe('EventEditDialogComponent', () => {
       participants: [{ email }, { email }],
       type: 'call'
     };
-    mockEvent = <Call>{
+    mockEvent = {
       created_date,
       event_date,
+      id: 1,
       name: 'qwe',
       participants: [
         {
@@ -140,7 +125,7 @@ describe('EventEditDialogComponent', () => {
 
     it('should have edit title and save (enabled) button when editing event', () => {
       expect(nameField.value).toEqual(mockEvent.name);
-      expect(dateField.value).toEqual('2/2/2019');
+      expect(dateField.value).toEqual('2/2/2020');
       expect(hoursField.value).toEqual('01');
       expect(minutesField.value).toEqual('02');
       expect(participant1Field.value).toEqual(mockEvent.participants[0].email);
@@ -212,3 +197,20 @@ describe('EventEditDialogComponent', () => {
     primaryButton.item(0).click();
   });
 });
+
+
+// Noop component is only a workaround to trigger change detection
+@Component({
+  template: ''
+})
+class NoopComponent {}
+
+const TEST_DIRECTIVES = [EventEditDialogComponent, NoopComponent];
+
+@NgModule({
+  declarations: [...TEST_DIRECTIVES],
+  entryComponents: [EventEditDialogComponent],
+  exports: [...TEST_DIRECTIVES],
+  imports: [AmmModule, ReactiveFormsModule]
+})
+class DialogTestModule {}

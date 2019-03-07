@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { LocalState } from '../../core/store/local-store';
+import { LocalStore } from '../../core/store/local-store';
 import { StoreService } from '../../core/store/store.service';
 import { PickLocationDialogComponent } from '../../meetings/pick-location-dialog/pick-location-dialog.component';
 import { Call, Meeting, PSEvent } from '../event';
@@ -16,16 +16,17 @@ import { EventService } from '../event.service';
 export class EventListComponent {
   events: (Meeting | Call)[];
   newCallId = 0;
-  eventStore: LocalState<Call | Meeting>;
+  eventStore: LocalStore<Call | Meeting>;
 
   constructor(
     private eventService: EventService<Call | Meeting>,
-    private storeService: StoreService,
+    private storeService: StoreService<Call | Meeting>,
     private dialog: MatDialog,
     private mapDialog: MatDialog
   ) {
     this.eventService.getAll().subscribe((events: (Call | Meeting)[]) => {
       this.events = events.slice(0, events.length + 1).map((e) => {
+        // reverting im-memory-api side effect (Date -> string)
         e.event_date = new Date(e.event_date);
         e.created_date = new Date(e.created_date);
 
@@ -34,67 +35,6 @@ export class EventListComponent {
 
       this.eventStore = this.storeService.buildEventStore(events);
       this.newCallId = events.length;
-    });
-  }
-
-  openCreateDialog(event: Call | Meeting) {
-    const dialogRef = this.dialog.open(EventEditDialogComponent, {
-      autoFocus: true,
-      data: {
-        creating: true,
-        event
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((newCall: any) => {
-      if (!newCall) {
-        return;
-      }
-
-      const { event_date, name, participants, hours, minutes } = newCall;
-
-      const id = (this.newCallId += 1);
-      const remasteredCall = <Call>{
-        ...event,
-        created_date: new Date(),
-        event_date: this.eventService.combineDateWithTime(event_date, { hours, minutes }),
-        id,
-        name,
-        participants
-      };
-
-      this.eventService.add(remasteredCall).subscribe(() => {
-        this.events.push(remasteredCall);
-        this.eventStore = this.storeService.buildEventStore(this.events);
-      });
-    });
-  }
-
-  openEditDialog(callEvent: Call | Meeting) {
-    const dialogRef = this.dialog.open(EventEditDialogComponent, {
-      autoFocus: true,
-      data: {
-        creating: false,
-        event: callEvent
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((newCall: any) => {
-      if (!newCall) {
-        return;
-      }
-
-      const { event_date, name, participants, hours, minutes } = newCall;
-
-      const remasteredCall = {
-        ...callEvent,
-        created_date: new Date(),
-        event_date: this.eventService.combineDateWithTime(event_date, { hours, minutes }),
-        name,
-        participants
-      };
-
-      this.saveEvent(remasteredCall);
     });
   }
 
@@ -143,6 +83,67 @@ export class EventListComponent {
       }
 
       this.saveEvent({ ...event, address: newAddress });
+    });
+  }
+
+  private openEditDialog(callEvent: Call | Meeting) {
+    const dialogRef = this.dialog.open(EventEditDialogComponent, {
+      autoFocus: true,
+      data: {
+        creating: false,
+        event: callEvent
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((newCall: any) => {
+      if (!newCall) {
+        return;
+      }
+
+      const { event_date, name, participants, hours, minutes } = newCall;
+
+      const remasteredCall = {
+        ...callEvent,
+        created_date: new Date(),
+        event_date: this.eventService.combineDateWithTime(event_date, { hours, minutes }),
+        name,
+        participants
+      };
+
+      this.saveEvent(remasteredCall);
+    });
+  }
+
+  private openCreateDialog(event: Call | Meeting) {
+    const dialogRef = this.dialog.open(EventEditDialogComponent, {
+      autoFocus: true,
+      data: {
+        creating: true,
+        event
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((newCall: any) => {
+      if (!newCall) {
+        return;
+      }
+
+      const { event_date, name, participants, hours, minutes } = newCall;
+
+      const id = (this.newCallId += 1);
+      const remasteredCall = <Call>{
+        ...event,
+        created_date: new Date(),
+        event_date: this.eventService.combineDateWithTime(event_date, { hours, minutes }),
+        id,
+        name,
+        participants
+      };
+
+      this.eventService.add(remasteredCall).subscribe(() => {
+        this.events.push(remasteredCall);
+        this.eventStore = this.storeService.buildEventStore(this.events);
+      });
     });
   }
 

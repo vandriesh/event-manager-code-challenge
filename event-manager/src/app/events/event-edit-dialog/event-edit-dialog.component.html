@@ -51,15 +51,15 @@
   </div>
 
   <div class="row" formArrayName="participants"
-      *ngFor="let participant of callForm.controls.participants?.controls; let i = index">
+      *ngFor="let participant of getControls(callForm, 'participants'); let i = index">
     <div class="col" [formGroupName]="i">
       <div class="full-width">
         <mat-form-field class="full-width field-participant-{{i}}">
           <input matInput placeholder="Participant {{i + 1}}" formControlName="email" autocomplete="off">
-          <mat-error *ngIf="participant.controls['email'].hasError('required')">
+          <mat-error *ngIf="participant['controls']['email'].hasError('required')">
             Participant {{i+1}} is <strong>required</strong>
           </mat-error>
-          <mat-error *ngIf="participant.controls['email'].hasError('email')">
+          <mat-error *ngIf="participant['controls']['email'].hasError('email')">
             Value should be email
           </mat-error>
         </mat-form-field>
