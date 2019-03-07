@@ -1,35 +1,29 @@
 import { formatDate } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 
-import { Call, Meeting, PSEvent } from '../../events/event';
+import { PSEvent } from '../../events/event';
 
-export function sortDescending({ event_date: a }: PSEvent, { event_date: b }: PSEvent) {
-  const aDate = a.getTime();
-  const bDate = b.getTime();
+import { LocalStore } from './local-store';
 
-  // const aDate = new Date(a).getTime();
-  // const bDate = new Date(b).getTime();
-  //
-  return aDate - bDate;
-}
+export const sortDescending = ({ event_date: a }: PSEvent, { event_date: b }: PSEvent) =>
+  a.getTime() - b.getTime();
 
 @Injectable({
   providedIn: 'root'
 })
-export class StoreService {
+export class StoreService<T extends PSEvent> {
   constructor(@Inject(LOCALE_ID) private locale: string) {}
 
-  buildEventStore(events: (Call | Meeting)[]) {
-    return this.buildStore<Call | Meeting>(events.sort(sortDescending), (e: Call) =>
+  buildEventStore(events: T[]) {
+    return this.buildStore(events.sort(sortDescending), (e: T) =>
       formatDate(e.event_date, 'yyyy-MM-dd', this.locale)
     );
   }
 
-  private buildStore<T>(events: T[], getKey: (e: T) => string) {
-    const store = {
+  buildStore(events: T[], getKey: (e: T) => string) {
+    const store: LocalStore<T> = {
       entities: {},
-      indexes: [],
-      nextId: events.length
+      indexes: []
     };
 
     events.forEach((event: T) => {

@@ -1,6 +1,6 @@
-export interface LocalState<T> {
+export interface LocalStore<T> {
   indexes: string[];
   entities: {
-    [key: string]: T;
+    [key: string]: T[];
   };
 }
