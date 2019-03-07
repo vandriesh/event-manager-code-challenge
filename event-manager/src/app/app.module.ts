@@ -19,7 +19,7 @@ import { PSLayoutModule } from './ps-layout/layout.module';
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemEventsService),
     EventsModule,
-    AppRoutingModule,
+    // AppRoutingModule,
     PSLayoutModule,
     BrowserAnimationsModule
   ],

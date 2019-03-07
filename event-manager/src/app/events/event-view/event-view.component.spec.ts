@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { AmmModule } from '../../core/amm/amm.module';
+import { PSEvent } from '../event';
 
 import { EventViewComponent } from './event-view.component';
 
@@ -8,14 +11,19 @@ describe('EventViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EventViewComponent ]
-    })
-    .compileComponents();
+      imports: [AmmModule],
+      declarations: [EventViewComponent, TimeAgoPipe]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EventViewComponent);
     component = fixture.componentInstance;
+    component.event = {
+      participants: [],
+      created_date: new Date(),
+      event_date: new Date()
+    } as PSEvent;
     fixture.detectChanges();
   });
 

@@ -27,8 +27,8 @@ export class EventService<T extends PSEvent> {
 
   formatEmailLink(call: PSEvent) {
     const mailto = this.getParticipantWEmails(call.participants).join(',');
-    const date = formatDate(call.event_date, 'yyyy-mm-dd hh:mm', this.locale);
-    const bodyMessage = `You are invited to a meeting at ${date}`;
+    const date = formatDate(call.event_date, 'yyyy-MM-dd HH:mm', this.locale);
+    const bodyMessage = `You are invited to a meeting on ${date}`;
 
     return `mailto:${mailto}?subject=${call.name}&body=${bodyMessage}`;
   }

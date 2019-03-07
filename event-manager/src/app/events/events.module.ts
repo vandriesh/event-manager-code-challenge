@@ -11,7 +11,7 @@ import { EventViewComponent } from './event-view/event-view.component';
 
 @NgModule({
   declarations: [EventListComponent, TimeAgoPipe, EventViewComponent],
-  exports: [EventViewComponent],
+  exports: [EventListComponent],
   imports: [CommonModule, CallsModule, MeetingsModule, AmmModule, VerticalTimelineModule]
 })
 export class EventsModule {}

@@ -8,19 +8,6 @@ import { PickLocationDialogComponent } from '../../meetings/pick-location-dialog
 import { Call, Meeting, PSEvent } from '../event';
 import { EventService } from '../event.service';
 
-export function getIndex(arr: PSEvent[], newDate: Date) {
-  for (let i = 0; i < arr.length; i++) {
-    const aDate = new Date(arr[i].event_date);
-    const diff = aDate.getTime() - newDate.getTime();
-
-    if (diff > 0) {
-      return i;
-    }
-  }
-
-  return arr.length;
-}
-
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',

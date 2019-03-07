@@ -8,7 +8,7 @@
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <div>Participants ({{event.participants.length}}):
+    <div>Participants ({{event.participants?.length}}):
       <mat-list dense>
         <mat-list-item *ngFor="let participant of event.participants">
           <mat-icon matListIcon>contact_mail</mat-icon> {{participant.email}}
