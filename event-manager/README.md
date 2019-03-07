@@ -28,3 +28,12 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Dockerisation
 
+1.build docker container
+```bash
+docker build -t nginx-angular -f nginx.prod.dockerfile .
+``` 
+2.start image:
+```bash
+docker run -p 8080:80 nginx-angular
+```
+3.open `localhost:8080` in your browser
