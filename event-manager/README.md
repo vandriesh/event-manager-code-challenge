@@ -1,30 +1,25 @@
-# EventManager
+# Code Challenge - #3 - EventManager
+Implement a simple application "Event manager":
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.4.
+1. Main screen should contain a list of "events" of two types "Call" and "Meeting":
+    1. user can create/edit/delete event;
+    1. events must be ordered by event date (desc);
+    1. all events fields should be shown on the main screen.
 
-## Development server
+1. User can create/delete/edit event "Call":
+    1. fields: event_date (datetime), name (string), created_date (date), exactly 2 participants;
+    1. participant should provide a valid email;
+    1. when new "Call" type event is created an email about it should be sent to participants.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. User can create/delete/edit event "Meeting":
+    1. fields: event_date (date), name (string), created_date (date), exactly 3 participants, address (string);
+    1. participant is just a name;
+    1. clicking on the address (main screen) should open maps application.
 
-## Code scaffolding
+Your pull request should contain:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+* High quality, well documented and tested code following clean architecture principles;
+* Instructions for our QA (not Angular engineer!), guiding how to setup and run "Event manager" application in a safe and emulated environment on Mac.
 
 ## Dockerisation
 
