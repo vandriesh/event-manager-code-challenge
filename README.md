@@ -21,4 +21,14 @@ Your pull request should contain:
 * High quality, well documented and tested code following clean architecture principles;
 * Instructions for our QA (not Angular engineer!), guiding how to setup and run "Event manager" application in a safe and emulated environment on Mac.
 
-Good luck!
+## Dockerisation
+
+1.build docker container
+```bash
+docker build -t nginx-angular -f nginx.prod.dockerfile .
+``` 
+2.start image:
+```bash
+docker run -p 8080:80 nginx-angular
+```
+3.open `localhost:8080` in your browser

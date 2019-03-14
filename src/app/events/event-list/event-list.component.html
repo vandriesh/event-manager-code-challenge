@@ -1,0 +1,48 @@
+<div style="padding: 20px 5% 0 5%">
+  <h1 class="mat-h1">Events</h1>
+  <button mat-button color="primary" (click)="openCreateCallDialog()" >
+    <mat-icon aria-label="Example icon-button with a heart icon">call</mat-icon>
+    Add Call Event</button>
+  <button mat-button color="primary" (click)="openCreateMeetingDialog()">
+    <mat-icon aria-label="Example icon-button with a heart icon">chat</mat-icon>
+    Add Meeting Event</button>
+</div>
+
+<vertical-timeline *ngIf="eventStore && eventStore.indexes.length">
+  <vertical-timeline-card *ngFor="let dateIndex of eventStore.indexes"
+      class="mat-elevation-z3"
+      [dateValue]="eventStore.entities[dateIndex][0].event_date"
+      [timeString]="eventStore.entities[dateIndex][0].event_date | date:'MMM d'">
+
+    <section *ngFor="let event of eventStore.entities[dateIndex]">
+      <div [ngSwitch]="event.type">
+        <app-event-view [event]="event" type="call" *ngSwitchCase="'call'"
+            (sendInvitation)="sendInvites(event)"
+            (editEvent)="editEvent(event)"
+            (deleteEvent)="deleteEvent(event)"
+        ></app-event-view>
+        <app-event-view [event]="event" type="chat" *ngSwitchCase="'meeting'"
+            (deleteEvent)="deleteEvent(event)"
+            (editEvent)="editEvent(event)"
+            (sendInvitation)="sendInvites(event)"
+        >
+          <mat-list-item *ngIf="!event.address">
+              <mat-icon (click)="pickAddressDialog(event)"
+                  matTooltip="Pick location"
+                  color="warn"
+                  class="clickable-icon animated bounce">place</mat-icon>
+              pick one
+          </mat-list-item>
+          <mat-list-item *ngIf="event.address">
+              <mat-icon (click)="pickAddressDialog(event)"
+                  matTooltip="Show location"
+                  class="clickable-icon">place</mat-icon>
+              LAT: {{event.address.lat}}, LNG: {{event.address.lng}}
+          </mat-list-item>
+        </app-event-view>
+      </div>
+    </section>
+  </vertical-timeline-card>
+</vertical-timeline>
+
+<h4 *ngIf="!eventStore || !eventStore.indexes.length" class="no-events-message">No events for you!</h4>
